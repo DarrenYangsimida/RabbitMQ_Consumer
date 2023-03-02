@@ -87,7 +87,7 @@ namespace ConsumerApp
             try
             {
                 Thread.Sleep(10000);
-                listBox1.Items.Add($"{listBox1.Items.Count + 1}、{message}");
+                listBox1.Items.Add($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] {message}");
                 return true;
             }
             catch (Exception ex)
@@ -125,20 +125,27 @@ namespace ConsumerApp
         /// <param name="message"></param>
         private void AsyncProcessor(string message)
         {
-            ThreadPool.SetMinThreads(1, 1);
-            ThreadPool.SetMaxThreads(5, 5);
-            WaitCallback callback = index =>
-             {
-                 //监听线程执行时间
-                 Stopwatch watch = new Stopwatch();
-                 watch.Start();
-                 logger.Info(string.Format("消费者接收消息：{0}", message));
-                 watch.Stop();
-                 TimeSpan timespan = watch.Elapsed;
-                 logger.Info(string.Format("线程执行时间：{0} 毫秒", timespan.TotalMilliseconds));
-             };
-            //在线程池中加入线程队列
-            _ = ThreadPool.QueueUserWorkItem(callback);
+            try
+            {
+                ThreadPool.SetMinThreads(1, 1);
+                ThreadPool.SetMaxThreads(5, 5);
+                WaitCallback callback = index =>
+                 {
+                     //监听线程执行时间
+                     Stopwatch watch = new Stopwatch();
+                     watch.Start();
+                     logger.Info(string.Format("消费者接收消息：{0}", message));
+                     watch.Stop();
+                     TimeSpan timespan = watch.Elapsed;
+                     logger.Info(string.Format("线程执行时间：{0} 毫秒", timespan.TotalMilliseconds));
+                 };
+                //在线程池中加入线程队列
+                _ = ThreadPool.QueueUserWorkItem(callback);
+            }
+            catch (Exception ex)
+            {
+                _ = ex.Message;
+            }
         }
 
     }
