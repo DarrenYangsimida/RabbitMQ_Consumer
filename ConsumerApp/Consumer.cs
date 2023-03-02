@@ -38,9 +38,9 @@ namespace ConsumerApp
             {
                 factory = new ConnectionFactory()
                 {
-                    HostName = "localhost",//本地 rabbitmq 服务
+                    HostName = "192.168.253.128",//rabbitmq server 地址，默认为本地 "localhost"
                     UserName = "admin",
-                    Password = "admin",
+                    Password = "123",
                     Port = 5672,
                 };
                 connection = factory.CreateConnection();
